@@ -23,6 +23,8 @@ When Claude drafts or edits a paper, researchers keep making the same correction
 
 The first version comes from about 1,000 corrections made by one researcher over three months of writing ML papers, position papers and a research proposal with Claude Code. The goal is to grow it with corrections from many researchers, in two commands per contributor.
 
+> **Status: very first version.** The rules currently reflect a single researcher's corrections, and some of them are certainly personal taste. They will be improved progressively, based on the contributions that come in: rules that other researchers confirm will move up, and rules that turn out to be individual preferences will be scoped or moved out.
+
 **Who this is for.** The rules are only as good as the reviewing behind them. They come from researchers who read what Claude writes line by line, push back, and ask for changes until the text says exactly what they mean. If you use Claude to write, these rules save you from repeating the same corrections. If you contribute, your history is useful only if it contains that kind of review. Someone who accepts drafts as they come has no corrections to share.
 
 ## Use the rules

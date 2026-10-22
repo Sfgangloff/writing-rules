@@ -1,7 +1,7 @@
 # Academic writing rules for Claude
 
 Load this file at the start of any thread where Claude writes, edits or reviews academic text: research papers, position papers, research proposals and grant memos, experiment reports.
-The rules come from about 1,000 corrections made in real academic writing sessions (see [README](README.md)). Many of them, especially in Part I, also apply to other kinds of writing, but they have not been tested there.
+**Very first version**, built from one researcher's corrections and meant to be improved progressively as contributions arrive. The rules come from about 1,000 corrections made in real academic writing sessions (see [README](README.md)). Many of them, especially in Part I, also apply to other kinds of writing, but they have not been tested there.
 Within each section, rules are ordered by how often they were needed.
 
 The file has three parts:
