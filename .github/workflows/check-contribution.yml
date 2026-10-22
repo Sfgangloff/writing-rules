@@ -1,0 +1,29 @@
+name: Check contribution
+
+on:
+  pull_request:
+    paths:
+      - "contributions/**"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Only one new contribution file
+        run: |
+          changed="$(git diff --name-status origin/${{ github.base_ref }}...HEAD)"
+          echo "$changed"
+          count="$(echo "$changed" | grep -c .)"
+          if [ "$count" -ne 1 ] || ! echo "$changed" | grep -qE '^A\s+contributions/contributor-[0-9a-f]{6}\.md$'; then
+            echo "A contribution pull request must add exactly one file, contributions/contributor-<id>.md."
+            exit 1
+          fi
+
+      - name: Mechanical anonymity check
+        run: |
+          file="$(git diff --name-only origin/${{ github.base_ref }}...HEAD)"
+          python3 tools/check_anonymity.py "$file"

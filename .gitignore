@@ -1,3 +1,3 @@
 user_messages.txt
-*.extracted.txt
+.contribution/
 .DS_Store
