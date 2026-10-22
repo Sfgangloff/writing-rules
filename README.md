@@ -21,7 +21,7 @@
 
 When Claude drafts or edits a paper, researchers keep making the same corrections: define this term, this reads like AI, don't refer to the previous draft, "rather than" again. This repository collects those corrections into one file, [`WRITING_RULES.md`](WRITING_RULES.md), that you load at the start of a writing session so that you don't have to repeat them.
 
-The first version comes from about 1,000 corrections made by one researcher over three months of writing ML papers, position papers and a research proposal with Claude Code. The goal is to grow it with corrections from many researchers, in two commands per contributor.
+The first version comes from about 1,000 corrections made by one researcher over one year of experimenting with academic writing using Claude Code. The goal is to grow it with corrections from many researchers, in two commands per contributor.
 
 > **Status: very first version.** The rules currently reflect a single researcher's corrections, and some of them are certainly personal taste. They will be improved progressively, based on the contributions that come in: rules that other researchers confirm will move up, and rules that turn out to be individual preferences will be scoped or moved out.
 
