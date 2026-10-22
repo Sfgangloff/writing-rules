@@ -2,7 +2,7 @@
 
 ## Profile
 
-- **Writes mostly:** (for example: ML conference papers, position papers, grant proposals, documentation, fiction)
+- **Writes mostly:** (for example: ML conference papers, journal articles, position papers, grant proposals, a thesis)
 - **Field:**
 - **Language of writing / native language:**
 - **Period covered:** (dates of the sessions analysed)

@@ -1,11 +1,13 @@
-# Writing rules for Claude
+# Academic writing rules for Claude
 
-A rules file to load into any Claude thread where you write, built from what writers actually correct when Claude drafts for them, and open to contributions.
+A rules file to load into any Claude thread where you write academic text (papers, position papers, research proposals, experiment reports). It is built from what researchers actually correct when Claude drafts for them, and open to contributions.
+
+**Scope:** academic writing only, for now. The first version comes from one researcher's papers. Fiction, journalism, documentation and business writing have different conventions, and could become separate files later if contributors bring the material.
 
 **Use it:** attach [`WRITING_RULES.md`](WRITING_RULES.md) at the start of a thread, or reference it from a `CLAUDE.md`:
 
 ```markdown
-When writing or editing any text, follow /path/to/WRITING_RULES.md.
+When writing or editing academic text, follow /path/to/WRITING_RULES.md.
 ```
 
 ## Reading rules and preferences
@@ -21,7 +23,7 @@ Reading rules should converge as more writers contribute. Preferences are expect
 
 Claude Code keeps a transcript of every session under `~/.claude/projects/`. The first version of the rules was extracted from one researcher's transcripts:
 
-1. [`tools/extract_messages.py`](tools/extract_messages.py) pulled only the messages the user typed (about 2,650 messages, over three months and 49 projects: ML papers, position papers, a grant memo, experiment reports), dropping pasted terminal output.
+1. [`tools/extract_messages.py`](tools/extract_messages.py) pulled only the messages the user typed (about 2,650 messages, over three months and 49 projects), dropping pasted terminal output. About 1,000 of them concern an academic text: ML papers, position papers, a grant memo, experiment reports.
 2. Claude read all of them and kept the ones that correct a text: rewordings ("rather than -> instead of"), complaints ("this reads like AI", "I don't understand"), structural requests, and process instructions ("make the modifications in blue").
 3. The corrections were grouped into rules, ordered by frequency, and written as instructions addressed to Claude.
 
@@ -29,7 +31,7 @@ The most frequent corrections were, in order: removing unnecessary sentences, ma
 
 ## Contribute your own
 
-One writer's corrections are one point of view. The goal is a shared file that reflects many writers, so that it captures what reliably improves Claude's writing, and shows where preferences differ.
+One researcher's corrections are one point of view. The goal is a shared file that reflects many researchers, across fields, so that it captures what reliably improves Claude's writing, and shows where preferences differ.
 
 1. Fork and clone this repository.
 2. Start Claude Code at the repository root and paste the prompt in [`tools/CONTRIBUTOR_PROMPT.md`](tools/CONTRIBUTOR_PROMPT.md). Claude extracts your messages **locally**, reads them, and drafts `contributions/<your-handle>.md` from [`contributions/TEMPLATE.md`](contributions/TEMPLATE.md).

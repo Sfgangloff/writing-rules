@@ -1,7 +1,7 @@
-# Writing rules for Claude
+# Academic writing rules for Claude
 
-Load this file at the start of any thread where Claude writes, edits or reviews text: papers, position papers, grant memos, reports, emails.
-The rules come from roughly 2,700 corrections made in real writing sessions (see [README](README.md)).
+Load this file at the start of any thread where Claude writes, edits or reviews academic text: research papers, position papers, research proposals and grant memos, experiment reports.
+The rules come from about 1,000 corrections made in real academic writing sessions (see [README](README.md)). Many of them, especially in Part I, also apply to other kinds of writing, but they have not been tested there.
 Within each section, rules are ordered by how often they were needed.
 
 The file has three parts:
@@ -10,7 +10,7 @@ The file has three parts:
 - **Part II - Style preferences.** These are matters of taste and of how a text is perceived, for example avoiding phrasings that readers associate with AI-generated text, or preferring "problem" to "task". They are well supported for the writers who contributed them, but another writer may legitimately differ. Apply them unless the author says otherwise.
 - **Part III - Working process.** How Claude should collaborate on a text: marking changes, scope of edits, reports. These are also preferences, about the process instead of the text.
 
-The academic rules (sections 3 to 9) assume a paper. The other sections apply to any text.
+Sections 3 to 9 assume a paper. The other sections also apply to proposals and reports.
 
 ---
 
