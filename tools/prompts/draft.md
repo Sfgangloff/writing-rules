@@ -20,6 +20,6 @@ Do not create or modify any other file.
    - titles of unpublished papers, or quotes long enough to identify an unpublished paper or project (rewrite examples generically: "the rule pool" instead of a project-specific term);
    - anything else that would let a reader guess who the contributor is.
    For the profile, give only broad categories (for example "machine learning", "ML conference papers").
-7. Write `{{REPORT}}`: a short list of what you left out or generalized for anonymity, and anything you were unsure about. This report stays on the contributor's machine.
+7. Write `{{REPORT}}`: a short list of what you left out or generalized for anonymity, and anything you were unsure about. This report is never published.
 8. If you found fewer than about 20 writing corrections in total, say so at the top of the privacy report: the history may not contain enough close reviewing for a useful contribution.
 9. Finish by printing one line: the path of the contribution file.

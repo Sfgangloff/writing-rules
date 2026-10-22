@@ -61,7 +61,7 @@ draft() {
   local id; id="$(contribution_id)"
   local output="contributions/$id.md"
 
-  echo "1/3 Extracting your messages from ~/.claude/projects (stays on this machine)..."
+  echo "1/3 Extracting your messages from ~/.claude/projects (the file stays local)..."
   python3 tools/extract_messages.py --out "$WORK/user_messages.txt" "$@"
 
   echo "2/3 Claude is reading them and drafting $output."

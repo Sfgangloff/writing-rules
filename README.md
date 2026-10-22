@@ -61,7 +61,7 @@ tools/contribute.sh draft     # 1. Claude drafts your contribution
 tools/contribute.sh submit    # 2. after your review: check, commit, open a pull request
 ```
 
-**1. `draft`** reads the messages you typed in Claude Code (`~/.claude/projects`) on your machine and keeps only corrections to academic texts. Claude groups them into rules and writes `contributions/contributor-<random id>.md`. It also writes a privacy report listing what it left out, in `.contribution/privacy_report.md`, which never leaves your machine. Reading everything takes 10 to 40 minutes, depending on your history. To limit it to some projects, add `--filter <part of the project folder name>`.
+**1. `draft`** extracts the messages you typed in Claude Code (`~/.claude/projects`) and keeps only corrections to academic texts. Claude groups them into rules and writes `contributions/contributor-<random id>.md`. It also writes a privacy report listing what it left out, in `.contribution/privacy_report.md`, which is never committed. Reading everything takes 10 to 40 minutes, depending on your history. To limit it to some projects, add `--filter <part of the project folder name>`.
 
 **2. Review the file.** Read it, and edit or delete anything you like.
 
@@ -80,7 +80,7 @@ The **content** of a contribution is anonymous by design. The file name is rando
 
 The **pull request itself** is opened from your GitHub account, and GitHub shows that account publicly. If you want to stay completely anonymous, run `submit` while logged in to a separate GitHub account (`gh auth login`).
 
-Your raw messages (`.contribution/`) are git-ignored and never leave your machine.
+Your raw messages and the privacy report (`.contribution/`) are git-ignored and are never published. Like any Claude Code session, `draft` and `submit` send what Claude reads to Anthropic for processing, under your usual Claude terms; only the contribution file you reviewed is pushed to GitHub.
 
 ## How contributions are merged
 

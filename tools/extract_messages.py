@@ -10,7 +10,7 @@ file, oldest first, one block per message:
 
 Terminal output pasted into the chat (shell prompts, tracebacks, job logs) is
 dropped, and long pastes are truncated, so the file stays focused on what you
-asked for. The output stays on your machine: it is raw material for
+asked for. The output file stays local: it is raw material for
 `tools/contribute.sh draft` and must never be committed.
 
 Usage:
