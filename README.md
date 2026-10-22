@@ -23,6 +23,8 @@ When Claude drafts or edits a paper, researchers keep making the same correction
 
 The first version comes from about 1,000 corrections made by one researcher over three months of writing ML papers, position papers and a research proposal with Claude Code. The goal is to grow it with corrections from many researchers, in two commands per contributor.
 
+**Who this is for.** The rules are only as good as the reviewing behind them. They come from researchers who read what Claude writes line by line, push back, and ask for changes until the text says exactly what they mean. If you use Claude to write, these rules save you from repeating the same corrections. If you contribute, your history is useful only if it contains that kind of review. Someone who accepts drafts as they come has no corrections to share.
+
 ## Use the rules
 
 Reference the file from the `CLAUDE.md` of your paper's project:
@@ -45,7 +47,7 @@ It ends with a self-review checklist that Claude runs before handing text back.
 
 ## Contribute your corrections
 
-Your Claude Code history already contains the corrections you make most often. Two commands turn it into a contribution.
+If you review Claude's academic writing closely, your Claude Code history already contains the corrections you make most often. Two commands turn it into a contribution. If `draft` finds few corrections in your history, that is a sign the contribution would add little: there is no need to submit it.
 
 **Requirements:** [Claude Code](https://docs.claude.com/en/docs/claude-code) with a Claude subscription, `git`, `python3`, and the [GitHub CLI](https://cli.github.com) logged in (`gh auth login`). For now, only Claude Code sessions are supported. Conversations in the Claude web or desktop apps are not stored locally.
 

@@ -21,4 +21,5 @@ Do not create or modify any other file.
    - anything else that would let a reader guess who the contributor is.
    For the profile, give only broad categories (for example "machine learning", "ML conference papers").
 7. Write `{{REPORT}}`: a short list of what you left out or generalized for anonymity, and anything you were unsure about. This report stays on the contributor's machine.
-8. Finish by printing one line: the path of the contribution file.
+8. If you found fewer than about 20 writing corrections in total, say so at the top of the privacy report: the history may not contain enough close reviewing for a useful contribution.
+9. Finish by printing one line: the path of the contribution file.
