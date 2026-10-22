@@ -10,8 +10,8 @@ file, oldest first, one block per message:
 
 Terminal output pasted into the chat (shell prompts, tracebacks, job logs) is
 dropped, and long pastes are truncated, so the file stays focused on what you
-asked for. The output stays on your machine: it is raw material for the
-contributor prompt (tools/CONTRIBUTOR_PROMPT.md) and must never be committed.
+asked for. The output stays on your machine: it is raw material for
+`tools/contribute.sh draft` and must never be committed.
 
 Usage:
     python3 tools/extract_messages.py [--out user_messages.txt]

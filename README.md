@@ -1,59 +1,105 @@
-# Academic writing rules for Claude
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
+    <img src="assets/logo-light.svg" alt="writing-rules logo" width="112">
+  </picture>
+</p>
 
-A rules file to load into any Claude thread where you write academic text (papers, position papers, research proposals, experiment reports). It is built from what researchers actually correct when Claude drafts for them, and open to contributions.
+<h1 align="center">writing-rules</h1>
 
-**Scope:** academic writing only, for now. The first version comes from one researcher's papers. Fiction, journalism, documentation and business writing have different conventions, and could become separate files later if contributors bring the material.
+<p align="center">
+  Academic writing rules for Claude, distilled from real paper-editing sessions.
+</p>
 
-**Use it:** attach [`WRITING_RULES.md`](WRITING_RULES.md) at the start of a thread, or reference it from a `CLAUDE.md`:
+<p align="center">
+  <a href="LICENSE"><img alt="Rules: CC BY 4.0" src="https://img.shields.io/badge/rules-CC%20BY%204.0-1f2937"></a>
+  <a href="LICENSE-CODE"><img alt="Code: MIT" src="https://img.shields.io/badge/code-MIT-1f2937"></a>
+  <img alt="Requires Claude Code" src="https://img.shields.io/badge/requires-Claude%20Code-b91c1c">
+</p>
+
+---
+
+When Claude drafts or edits a paper, researchers keep making the same corrections: define this term, this reads like AI, don't refer to the previous draft, "rather than" again. This repository collects those corrections into one file, [`WRITING_RULES.md`](WRITING_RULES.md), that you load at the start of a writing session so that you don't have to repeat them.
+
+The first version comes from about 1,000 corrections made by one researcher over three months of writing ML papers, position papers and a research proposal with Claude Code. The goal is to grow it with corrections from many researchers, in two commands per contributor.
+
+## Use the rules
+
+Reference the file from the `CLAUDE.md` of your paper's project:
 
 ```markdown
-When writing or editing academic text, follow /path/to/WRITING_RULES.md.
+When writing or editing academic text, follow /path/to/writing-rules/WRITING_RULES.md.
 ```
 
-## Reading rules and preferences
+Or attach `WRITING_RULES.md` at the start of any Claude conversation.
 
-The file separates two kinds of rules:
+The file has three parts:
 
-- **Part I - Reading rules** make a text easier to read and to trust, whoever writes it and whoever reads it. Examples: define a term before using it, use one name per concept, introduce a table before commenting on it, never refer to a draft the reader never saw.
-- **Part II - Style preferences** and **Part III - Working process** are matters of taste. Examples: avoiding phrasings associated with AI-generated text (em dashes, "rather than"), preferring "problem" to "task", marking edits in blue for review.
+| Part | What it contains | How to treat it |
+|---|---|---|
+| **I. Reading rules** | Rules that make a text easier to read and to trust, whoever writes and reads it: define terms at first use, one name per concept, never refer to drafts the reader never saw, introduce a table before commenting on it. | Apply always. |
+| **II. Style preferences** | Matters of taste: avoiding phrasings associated with AI-generated text (em dashes, "rather than"), word choices such as "problem" over "task". | Apply unless the author says otherwise. |
+| **III. Working process** | How Claude should collaborate: understand ideas before writing them down, edit exactly the requested scope, mark every change for review. | Apply unless the author says otherwise. |
 
-Reading rules should converge as more writers contribute. Preferences are expected to vary, and the synthesis records the disagreements instead of hiding them.
+It ends with a self-review checklist that Claude runs before handing text back.
 
-## How it was built
+## Contribute your corrections
 
-Claude Code keeps a transcript of every session under `~/.claude/projects/`. The first version of the rules was extracted from one researcher's transcripts:
+Your Claude Code history already contains the corrections you make most often. Two commands turn it into a contribution.
 
-1. [`tools/extract_messages.py`](tools/extract_messages.py) pulled only the messages the user typed (about 2,650 messages, over three months and 49 projects), dropping pasted terminal output. About 1,000 of them concern an academic text: ML papers, position papers, a grant memo, experiment reports.
-2. Claude read all of them and kept the ones that correct a text: rewordings ("rather than -> instead of"), complaints ("this reads like AI", "I don't understand"), structural requests, and process instructions ("make the modifications in blue").
-3. The corrections were grouped into rules, ordered by frequency, and written as instructions addressed to Claude.
+**Requirements:** [Claude Code](https://docs.claude.com/en/docs/claude-code) with a Claude subscription, `git`, `python3`, and the [GitHub CLI](https://cli.github.com) logged in (`gh auth login`). For now, only Claude Code sessions are supported. Conversations in the Claude web or desktop apps are not stored locally.
 
-The most frequent corrections were, in order: removing unnecessary sentences, making explanations understandable to a newcomer, marking every change for review, replacing "rather than" and "X, not Y" constructions, adding and checking citations, and a small set of word substitutions ("task" -> "problem", "ask" -> "question", "give" -> "provide"). The per-writer summary is in [`contributions/sfgangloff.md`](contributions/sfgangloff.md).
+```bash
+git clone https://github.com/Sfgangloff/writing-rules.git
+cd writing-rules
 
-## Contribute your own
+tools/contribute.sh draft     # 1. Claude drafts your contribution
+tools/contribute.sh submit    # 2. after your review: check, commit, open a pull request
+```
 
-One researcher's corrections are one point of view. The goal is a shared file that reflects many researchers, across fields, so that it captures what reliably improves Claude's writing, and shows where preferences differ.
+**1. `draft`** reads the messages you typed in Claude Code (`~/.claude/projects`) on your machine and keeps only corrections to academic texts. Claude groups them into rules and writes `contributions/contributor-<random id>.md`. It also writes a privacy report listing what it left out, in `.contribution/privacy_report.md`, which never leaves your machine. Reading everything takes 10 to 40 minutes, depending on your history. To limit it to some projects, add `--filter <part of the project folder name>`.
 
-1. Fork and clone this repository.
-2. Start Claude Code at the repository root and paste the prompt in [`tools/CONTRIBUTOR_PROMPT.md`](tools/CONTRIBUTOR_PROMPT.md). Claude extracts your messages **locally**, reads them, and drafts `contributions/<your-handle>.md` from [`contributions/TEMPLATE.md`](contributions/TEMPLATE.md).
-3. Review the draft yourself, especially for privacy (see below), then open a pull request that adds only that file.
+**2. Review the file.** Read it, and edit or delete anything you like.
 
-Maintainers periodically run [`tools/SYNTHESIS_PROMPT.md`](tools/SYNTHESIS_PROMPT.md) to merge all contributions into `WRITING_RULES.md`. Rules that several writers share move up. Rules that conflict are kept with their scope ("in position papers", "for single-author papers"), and personal taste stays in the contributor's own file. Each synthesis is recorded in `SYNTHESIS_LOG.md`.
+**3. `submit`** never modifies your file. It runs four checks and stops at the first failure:
 
-## Privacy
+1. The contribution file must be the only change in the repository.
+2. A mechanical scan finds emails, URLs, file paths, phone numbers, ID-like strings, and your own name, git email and GitHub login.
+3. Claude reviews the file in read-only mode for anything identifying: people, institutions, projects, unpublished work.
+4. If everything passes, it commits the file under the identity "Anonymous contributor", pushes it to your fork, and opens a pull request with a one-line description.
 
-Your transcripts contain much more than writing feedback: credentials pasted by mistake, personal documents, collaborators' names, unpublished work. Therefore:
+If a check fails, fix the file and run `submit` again. If the push or the pull request is interrupted, running `submit` again picks up where it stopped.
 
-- the raw extraction (`user_messages.txt`) is git-ignored and must never be committed;
-- the contributor prompt includes a privacy pass, but **you** are responsible for reading your contribution before you push it;
-- contributions contain rules and short, generic examples, never transcripts.
+## Anonymity
 
-## Layout
+The **content** of a contribution is anonymous by design. The file name is random, the commit author is "Anonymous contributor", and two independent checks look for identifying details before anything is pushed. Every pull request is checked again by [a GitHub workflow](.github/workflows/check-contribution.yml).
+
+The **pull request itself** is opened from your GitHub account, and GitHub shows that account publicly. If you want to stay completely anonymous, run `submit` while logged in to a separate GitHub account (`gh auth login`).
+
+Your raw messages (`.contribution/`) are git-ignored and never leave your machine.
+
+## How contributions are merged
+
+Contributions are merged into `WRITING_RULES.md` with [`tools/prompts/synthesis.md`](tools/prompts/synthesis.md):
+
+- Reading rules that several contributors share move up.
+- Preferences on which contributors disagree are kept with their scope ("in position papers", "for single-author papers"). The synthesis does not choose a side.
+- Taste specific to one person stays in that person's contribution file.
+
+Each synthesis is recorded in [`SYNTHESIS_LOG.md`](SYNTHESIS_LOG.md).
+
+## Repository layout
 
 ```
-WRITING_RULES.md            the synthesized rules (load this)
-contributions/TEMPLATE.md   format for a contribution
-contributions/<handle>.md   one file per writer
-tools/extract_messages.py   local extraction of your Claude Code messages
-tools/CONTRIBUTOR_PROMPT.md prompt to draft your contribution
-tools/SYNTHESIS_PROMPT.md   prompt to merge contributions
+WRITING_RULES.md              the rules: load this file
+contributions/                one file per contributor, plus TEMPLATE.md
+                              (sfgangloff.md is the maintainer's own, named file)
+tools/contribute.sh           the two contribution commands
+tools/extract_messages.py     extracts your messages from Claude Code transcripts
+tools/check_anonymity.py      mechanical anonymity scan
+tools/prompts/                prompts for drafting, reviewing and synthesizing
 ```
+
+## License
+
+The rules and other texts are licensed under [CC BY 4.0](LICENSE). The code in `tools/` is licensed under [MIT](LICENSE-CODE).

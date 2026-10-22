@@ -4,7 +4,7 @@
 
 - **Writes mostly:** (for example: ML conference papers, journal articles, position papers, grant proposals, a thesis)
 - **Field:**
-- **Language of writing / native language:**
+- **Language of writing:**
 - **Period covered:** (dates of the sessions analysed)
 - **Volume:** (number of messages analysed, number of writing corrections found)
 

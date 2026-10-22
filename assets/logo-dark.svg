@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="writing-rules logo">
+  <path d="M30 14 H80 L102 36 V114 H30 Z" fill="#111827" stroke="#e5e7eb" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M80 14 V36 H102" fill="none" stroke="#e5e7eb" stroke-width="5" stroke-linejoin="round"/>
+  <g stroke-width="5" stroke-linecap="round">
+    <line x1="42" y1="50" x2="88" y2="50" stroke="#6b7280"/>
+    <line x1="42" y1="64" x2="80" y2="64" stroke="#6b7280"/>
+    <line x1="42" y1="78" x2="88" y2="78" stroke="#6b7280"/>
+    <line x1="42" y1="92" x2="60" y2="92" stroke="#6b7280"/>
+    <line x1="38" y1="64" x2="84" y2="64" stroke="#f87171"/>
+  </g>
+  <path d="M64 100 L71 90 L78 100" fill="none" stroke="#f87171" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
