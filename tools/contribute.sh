@@ -98,11 +98,17 @@ submit() {
   local output="contributions/$id.md"
   [[ -f "$output" ]] || die "$output not found"
 
+  local branch="contribution/$id" resume=""
   echo "1/4 Checking that $output is the only change..."
   local changes; changes="$(changed_files)"
-  [[ "$changes" == "$output" ]] || die "only $output may differ from the repository. Found:
+  if [[ -z "$changes" && "$(git rev-parse --abbrev-ref HEAD)" == "$branch" \
+        && "$(git diff --name-only main...HEAD)" == "$output" ]]; then
+    resume=1  # an earlier submit committed the file but did not finish
+  elif [[ "$changes" != "$output" ]]; then
+    die "only $output may differ from the repository. Found:
 $changes
 Revert the other changes (git checkout -- <file>) and run submit again."
+  fi
 
   local before; before="$(shasum -a 256 "$output")"
 
@@ -123,18 +129,19 @@ Revert the other changes (git checkout -- <file>) and run submit again."
     || die "the review found issues (see above). Fix them in $output, then run submit again."
 
   echo "4/4 Committing anonymously, pushing and opening the pull request..."
-  local login branch remote head
+  local login remote head
   if [[ -n "${WRITING_RULES_DRY_RUN:-}" ]]; then  # for testing: stop before touching git
     echo "dry run: would commit $output anonymously, push it and open a pull request on $UPSTREAM"
     return
   fi
   login="$(gh api user -q .login)"
-  branch="contribution/$id"
-  git checkout -q -b "$branch"
-  git add -- "$output"
-  GIT_AUTHOR_NAME="Anonymous contributor" GIT_AUTHOR_EMAIL="anonymous@users.noreply.github.com" \
-  GIT_COMMITTER_NAME="Anonymous contributor" GIT_COMMITTER_EMAIL="anonymous@users.noreply.github.com" \
-    git commit -q -m "Add $id"
+  if [[ -z "$resume" ]]; then
+    git checkout -q -b "$branch"
+    git add -- "$output"
+    GIT_AUTHOR_NAME="Anonymous contributor" GIT_AUTHOR_EMAIL="anonymous@users.noreply.github.com" \
+    GIT_COMMITTER_NAME="Anonymous contributor" GIT_COMMITTER_EMAIL="anonymous@users.noreply.github.com" \
+      git commit -q -m "Add $id"
+  fi
 
   if [[ "$login" == "${UPSTREAM%%/*}" ]]; then
     remote="origin"; head="$branch"
@@ -146,7 +153,7 @@ Revert the other changes (git checkout -- <file>) and run submit again."
   fi
   for attempt in 1 2 3 4 5; do  # a new fork can take a few seconds to be ready
     git push -q -u "$remote" "$branch" && break
-    [[ $attempt == 5 ]] && die "push failed"
+    [[ $attempt == 5 ]] && die "push failed; check your connection and run submit again"
     sleep 5
   done
 
