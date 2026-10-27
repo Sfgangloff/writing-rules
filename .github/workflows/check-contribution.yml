@@ -3,7 +3,7 @@ name: Check contribution
 on:
   pull_request:
     paths:
-      - "contributions/**"
+      - "contributions/contributor-*.md"  # contributor files only, so maintainer edits of TEMPLATE.md are not checked
 
 jobs:
   check:
