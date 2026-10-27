@@ -68,7 +68,7 @@ draft() {
   local id; id="$(contribution_id)"
   local output="contributions/$id.md"
   local update=""
-  [[ -f "$output" ]] && update="This is an update: \`$output\` already exists and is the contributor's earlier contribution. Update it instead of starting over (see step 5)."
+  [[ -f "$output" ]] && update="This is an update: \`$output\` already exists and is the contributor's earlier contribution. Update it instead of starting over (see step 6)."
   rm -f "$WORK/notes.md"  # notes from an earlier draft would mix with the new reading
 
   echo "1/3 Extracting your messages from ~/.claude/projects (the file stays local)..."
