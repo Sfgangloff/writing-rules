@@ -2,7 +2,9 @@
 # Contribute your academic writing rules, anonymously.
 #
 #   tools/contribute.sh draft    extract your Claude Code messages and let Claude
-#                                draft contributions/contributor-<id>.md
+#                                draft contributions/contributor-<id>.md, or update
+#                                it if you contributed before (--id restores the
+#                                id of an earlier contribution in a new clone)
 #   tools/contribute.sh submit   check the file is the only change and is anonymous,
 #                                then commit it under an anonymous identity, push it
 #                                and open a pull request. It never modifies the file.
@@ -57,18 +59,26 @@ changed_files() {  # every path that differs from HEAD, untracked included
 draft() {
   require claude python3 git
   mkdir -p "$WORK"
+  if [[ "${1:-}" == "--id" ]]; then  # reuse an earlier contribution, e.g. from another clone
+    [[ "${2:-}" =~ ^contributor-[0-9a-f]{6}$ ]] || die "--id expects contributor-<6 hex digits>"
+    echo "$2" > "$ID_FILE"
+    shift 2
+  fi
   [[ -f "$ID_FILE" ]] || echo "contributor-$(python3 -c 'import secrets; print(secrets.token_hex(3))')" > "$ID_FILE"
   local id; id="$(contribution_id)"
   local output="contributions/$id.md"
+  local update=""
+  [[ -f "$output" ]] && update="This is an update: \`$output\` already exists and is the contributor's earlier contribution. Update it instead of starting over (see step 5)."
+  rm -f "$WORK/notes.md"  # notes from an earlier draft would mix with the new reading
 
   echo "1/3 Extracting your messages from ~/.claude/projects (the file stays local)..."
   python3 tools/extract_messages.py --out "$WORK/user_messages.txt" "$@"
 
-  echo "2/3 Claude is reading them and drafting $output."
+  echo "2/3 Claude is reading them and ${update:+updating}${update:-drafting} $output."
   echo "    This reads every message and can take 10 to 40 minutes."
   claude -p "$(fill tools/prompts/draft.md \
       "MESSAGES=.contribution/user_messages.txt" "NOTES=.contribution/notes.md" \
-      "OUTPUT=$output" "REPORT=.contribution/privacy_report.md" "ID=$id")" \
+      "OUTPUT=$output" "REPORT=.contribution/privacy_report.md" "ID=$id" "UPDATE=$update")" \
     --tools "Read,Write,Edit,Grep" --permission-mode acceptEdits \
     --no-session-persistence >/dev/null
 
@@ -98,11 +108,13 @@ submit() {
   local output="contributions/$id.md"
   [[ -f "$output" ]] || die "$output not found"
 
-  local branch="contribution/$id" resume=""
+  local branch resume=""
   echo "1/4 Checking that $output is the only change..."
   local changes; changes="$(changed_files)"
-  if [[ -z "$changes" && "$(git rev-parse --abbrev-ref HEAD)" == "$branch" \
-        && "$(git diff --name-only main...HEAD)" == "$output" ]]; then
+  branch="$(git rev-parse --abbrev-ref HEAD)"
+  if [[ -z "$changes" && "$branch" == contribution/$id* \
+        && "$(git log -1 --format=%an)" == "Anonymous contributor" \
+        && "$(git show --name-only --format= HEAD)" == "$output" ]]; then
     resume=1  # an earlier submit committed the file but did not finish
   elif [[ "$changes" != "$output" ]]; then
     die "only $output may differ from the repository. Found:
@@ -135,12 +147,28 @@ Revert the other changes (git checkout -- <file>) and run submit again."
     return
   fi
   login="$(gh api user -q .login)"
-  if [[ -z "$resume" ]]; then
-    git checkout -q -b "$branch"
+  local title
+  if [[ -n "$resume" ]]; then
+    title="$(git log -1 --format=%s)"
+  else
+    # Branch from the current upstream main, so that the pull request holds this
+    # commit only, even if this clone is old or still on an earlier contribution.
+    git fetch -q "https://github.com/$UPSTREAM.git" main || die "could not fetch $UPSTREAM; check your connection"
+    local base; base="$(git rev-parse FETCH_HEAD)"
+    if git cat-file -e "$base:$output" 2>/dev/null; then title="Update $id"; else title="Add $id"; fi
+    branch="contribution/$id-$(date +%Y%m%d%H%M%S)"
+    local saved; saved="$(mktemp)"
+    cp "$output" "$saved"
+    if git ls-files --error-unmatch "$output" >/dev/null 2>&1; then git checkout -q -- "$output"; else rm "$output"; fi
+    if ! git checkout -q -b "$branch" "$base"; then
+      cp "$saved" "$output"
+      die "could not create the branch $branch; your file is unchanged"
+    fi
+    cp "$saved" "$output" && rm -f "$saved"
     git add -- "$output"
     GIT_AUTHOR_NAME="Anonymous contributor" GIT_AUTHOR_EMAIL="anonymous@users.noreply.github.com" \
     GIT_COMMITTER_NAME="Anonymous contributor" GIT_COMMITTER_EMAIL="anonymous@users.noreply.github.com" \
-      git commit -q -m "Add $id"
+      git commit -q -m "$title" || die "$output is identical to the published version; nothing to submit"
   fi
 
   if [[ "$login" == "${UPSTREAM%%/*}" ]]; then
@@ -158,12 +186,12 @@ Revert the other changes (git checkout -- <file>) and run submit again."
   done
 
   gh pr create --repo "$UPSTREAM" --base main --head "$head" \
-    --title "Add $id" \
+    --title "$title" \
     --body "Anonymous academic writing rules contribution, generated with \`tools/contribute.sh\`."
 }
 
 case "${1:-}" in
   draft)  shift; draft "$@" ;;
   submit) submit ;;
-  *) echo "usage: tools/contribute.sh draft [--filter PROJECT ...] | submit" >&2; exit 2 ;;
+  *) echo "usage: tools/contribute.sh draft [--id contributor-<id>] [--filter PROJECT ...] | submit" >&2; exit 2 ;;
 esac

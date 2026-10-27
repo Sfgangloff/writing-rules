@@ -1,0 +1,16 @@
+{
+  "name": "writing-rules",
+  "owner": {
+    "name": "Sfgangloff"
+  },
+  "metadata": {
+    "description": "Tools for writing with Claude, built from researchers' corrections."
+  },
+  "plugins": [
+    {
+      "name": "writing-toolkit",
+      "source": "./plugin",
+      "description": "Academic writing rules distilled from researchers' corrections, and a linter that flags phrasings that read as AI-generated."
+    }
+  ]
+}

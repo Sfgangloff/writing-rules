@@ -1,0 +1,17 @@
+{
+  "description": "Lint the text Claude just wrote in a .tex file (configurable) for phrasings that read as AI-generated.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/academic-writing/scripts/lint_text.py\" --hook",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

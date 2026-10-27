@@ -25,7 +25,7 @@ When unsure, ask: would a careful reader with different tastes still be helped b
 - **Kind:** AI tell | word choice | clarity | structure | argument | process | formatting | citations
 - **Examples:**
   - "<before>" -> "<after>"
-- **Relation to WRITING_RULES.md:** new | confirms §x.y | contradicts §x.y (explain)
+- **Relation to the current rules:** new | confirms <file>, rule <n> | contradicts <file>, rule <n> (explain)
 
 ### 2. ...
 

@@ -3,7 +3,7 @@ name: Check contribution
 on:
   pull_request:
     paths:
-      - "contributions/**"
+      - "contributions/contributor-*.md"  # contributor files only, so maintainer edits of TEMPLATE.md are not checked
 
 jobs:
   check:
@@ -13,13 +13,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Only one new contribution file
+      - name: Only one contribution file
         run: |
           changed="$(git diff --name-status origin/${{ github.base_ref }}...HEAD)"
           echo "$changed"
           count="$(echo "$changed" | grep -c .)"
-          if [ "$count" -ne 1 ] || ! echo "$changed" | grep -qE '^A\s+contributions/contributor-[0-9a-f]{6}\.md$'; then
-            echo "A contribution pull request must add exactly one file, contributions/contributor-<id>.md."
+          if [ "$count" -ne 1 ] || ! echo "$changed" | grep -qE '^[AM]\s+contributions/contributor-[0-9a-f]{6}\.md$'; then
+            echo "A contribution pull request must add or update exactly one file, contributions/contributor-<id>.md."
             exit 1
           fi
 
