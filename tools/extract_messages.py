@@ -58,10 +58,15 @@ def message_text(entry):
     return text
 
 
+# The home directory at the start of a transcript folder name: -Users-me- (macOS),
+# -home-me- (Linux), C--Users-me- (Windows).
+HOME_PREFIX = re.compile(r"^(?:[A-Za-z]-)?-(?:Users|home)-[^-]+-?")
+
+
 def project_name(path):
     """Turn a transcript folder name like -Users-me-Desktop-Paper into Desktop-Paper."""
     folder = os.path.basename(os.path.dirname(path))
-    return re.sub(r"^-Users-[^-]+-", "", folder).lstrip("-") or folder
+    return HOME_PREFIX.sub("", folder).lstrip("-") or "home"
 
 
 def main():

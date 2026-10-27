@@ -19,33 +19,81 @@
 
 ---
 
-When Claude drafts or edits a paper, researchers keep making the same corrections: define this term, this reads like AI, don't refer to the previous draft, "rather than" again. This repository collects those corrections into one file, [`WRITING_RULES.md`](WRITING_RULES.md), that you load at the start of a writing session so that you don't have to repeat them.
+When Claude drafts or edits a paper, researchers keep making the same corrections: define this term, this reads like AI, don't refer to the previous draft, "rather than" again. This repository collects those corrections into a Claude Code plugin, so that you don't have to repeat them.
 
 The first version comes from about 1,000 corrections made by one researcher over three months of writing ML papers, position papers and a research proposal with Claude Code. The goal is to grow it with corrections from many researchers, in two commands per contributor.
 
-> **Status: very first version.** The rules currently reflect a single researcher's corrections, and some of them are certainly personal taste. They will be improved progressively, based on the contributions that come in: rules that other researchers confirm will move up, and rules that turn out to be individual preferences will be scoped or moved out.
+> **Status: very first version.** The rules currently reflect a single researcher's corrections. Rules that turned out to be one person's taste have been left out, and the rest will be improved progressively as contributions come in: rules that other researchers confirm will move up, and rules that turn out to be individual preferences will be scoped, made optional or moved out.
 
 **Who this is for.** The rules are only as good as the reviewing behind them. They come from researchers who read what Claude writes line by line, push back, and ask for changes until the text says exactly what they mean. If you use Claude to write, these rules save you from repeating the same corrections. If you contribute, your history is useful only if it contains that kind of review. Someone who accepts drafts as they come has no corrections to share.
 
-## Use the rules
+## What it does
 
-Reference the file from the `CLAUDE.md` of your paper's project:
+| Without the rules | With the rules |
+|---|---|
+| Rather than a single pooled number, Table 2 reports per-world accuracy &mdash; a genuinely more informative view. As revised, the effect no longer depends on the seed. | Table 2 reports the accuracy of the model on each world separately. The effect is the same for the five random seeds we tried. |
 
-```markdown
-When writing or editing academic text, follow /path/to/writing-rules/WRITING_RULES.md.
+The `writing-toolkit` plugin contains two things:
+
+- **The `academic-writing` skill.** Claude loads it whenever it drafts, edits or reviews an academic text. It holds a short core of rules that apply to every text, and detailed rules in separate files (paper structure, argumentation, mathematics, citations, position papers, submission, style) that Claude opens one at a time, only when the task needs them. This keeps Claude's attention on the rules that matter for what it is doing.
+- **A writing linter.** Every time Claude writes into a `.tex` file, the linter scans the new text for phrasings that read as AI-generated ("rather than", em dashes, ", not X" contrasts, "genuinely", "testbed", ...) and asks Claude to rewrite them. You can also run it yourself.
+
+## Install
+
+In Claude Code (version 2.1.275 or later):
+
+```
+/plugin install writing-toolkit --marketplace Sfgangloff/writing-rules
 ```
 
-Or attach `WRITING_RULES.md` at the start of any Claude conversation.
+With an older version, add the marketplace first: `/plugin marketplace add Sfgangloff/writing-rules`, then `/plugin install writing-toolkit@writing-rules`.
 
-The file has three parts:
+The linter needs `python3`. To use the rules without Claude Code, in the Claude apps, zip the folder [`plugin/skills/academic-writing`](plugin/skills/academic-writing) and upload it as a skill in the settings (the linter does not run there). With another assistant, give it [`SKILL.md`](plugin/skills/academic-writing/SKILL.md) and the files in `reference/`.
 
-| Part | What it contains | How to treat it |
-|---|---|---|
-| **I. Reading rules** | Rules that make a text easier to read and to trust, whoever writes and reads it: define terms at first use, one name per concept, never refer to drafts the reader never saw, introduce a table before commenting on it. | Apply always. |
-| **II. Style preferences** | Matters of taste: avoiding phrasings associated with AI-generated text (em dashes, "rather than"), word choices such as "problem" over "task". | Apply unless the author says otherwise. |
-| **III. Working process** | How Claude should collaborate: understand ideas before writing them down, edit exactly the requested scope, mark every change for review. | Apply unless the author says otherwise. |
+## Make it yours
 
-It ends with a self-review checklist that Claude runs before handing text back.
+### Personal rules
+
+Write your own rules in a Markdown file. Claude reads it before writing, and it takes precedence over the default rules:
+
+- `~/.claude/writing-rules/personal.md` for all your projects;
+- `.claude/writing-rules/personal.md` in a project, for that project only (it takes precedence over the first).
+
+Write one instruction per line, as you would say it to Claude:
+
+```markdown
+- Single author: use "I".
+- Write "problem" instead of "task".
+- Section titles in sentence case.
+- Track changes in color.
+```
+
+The last line turns on an **optional practice**. These are habits that help many authors without being good defaults, such as writing every change in blue for review and removing the color only after you approve it. The available practices, and the line that turns each one on, are listed in [`reference/optional-practices.md`](plugin/skills/academic-writing/reference/optional-practices.md).
+
+### Linter rules
+
+The default rules are in [`lint_rules.json`](plugin/skills/academic-writing/scripts/lint_rules.json). Each rule has a regular expression, a message, and optionally a default replacement. To change them, create `~/.claude/writing-rules/lint.json` (all projects) or `.claude/writing-rules/lint.json` (one project), in the same format. A rule with an existing `id` changes that rule, and a new `id` adds a rule:
+
+```json
+{
+  "hook_extensions": [".tex", ".md"],
+  "rules": [
+    {"id": "rather-than", "enabled": false},
+    {"id": "em-dash", "replace": " - "},
+    {"id": "utilize", "pattern": "\\butiliz(e|es|ed|ing)\\b", "message": "write \"use\""}
+  ]
+}
+```
+
+`hook_extensions` sets the files the hook checks (`.tex` by default). To run the linter yourself, use the script in the installed plugin, or in a clone of this repository:
+
+```bash
+python3 plugin/skills/academic-writing/scripts/lint_text.py paper.tex         # report
+python3 plugin/skills/academic-writing/scripts/lint_text.py --fix paper.tex   # apply the replacements
+python3 plugin/skills/academic-writing/scripts/lint_text.py --list            # show the active rules
+```
+
+A replacement is applied only by `--fix`. When Claude gets a report, it treats the replacement as a suggestion and restructures the sentence if that reads better.
 
 ## Contribute your corrections
 
@@ -74,6 +122,8 @@ tools/contribute.sh submit    # 2. after your review: check, commit, open a pull
 
 If a check fails, fix the file and run `submit` again. If the push or the pull request is interrupted, running `submit` again picks up where it stopped.
 
+**Contributing again.** Run the same two commands some months later. `draft` updates your existing file with your new corrections, and `submit` opens a pull request that updates it. The id of your contribution is stored in `.contribution/id` in your clone. In a new clone, restore it with `tools/contribute.sh draft --id contributor-<id>`.
+
 ## Anonymity
 
 The **content** of a contribution is anonymous by design. The file name is random, the commit author is "Anonymous contributor", and two independent checks look for identifying details before anything is pushed. Every pull request is checked again by [a GitHub workflow](.github/workflows/check-contribution.yml).
@@ -84,26 +134,35 @@ Your raw messages and the privacy report (`.contribution/`) are git-ignored and 
 
 ## How contributions are merged
 
-Contributions are merged into `WRITING_RULES.md` with [`tools/prompts/synthesis.md`](tools/prompts/synthesis.md):
+Contributions are merged into the skill with [`tools/prompts/synthesis.md`](tools/prompts/synthesis.md):
 
-- Reading rules that several contributors share move up.
+- Reading rules that several contributors share move up, and the most important ones go into the core of the skill.
 - Preferences on which contributors disagree are kept with their scope ("in position papers", "for single-author papers"). The synthesis does not choose a side.
-- Taste specific to one person stays in that person's contribution file.
+- Practices that help some authors but should not be defaults become optional practices.
+- Taste specific to one person stays in that person's contribution file, and in their own `personal.md`.
 
 Each synthesis is recorded in [`SYNTHESIS_LOG.md`](SYNTHESIS_LOG.md).
 
 ## Repository layout
 
 ```
-WRITING_RULES.md              the rules: load this file
-contributions/                one file per contributor, plus TEMPLATE.md
-                              (sfgangloff.md is the maintainer's own, named file)
-tools/contribute.sh           the two contribution commands
-tools/extract_messages.py     extracts your messages from Claude Code transcripts
-tools/check_anonymity.py      mechanical anonymity scan
-tools/prompts/                prompts for drafting, reviewing and synthesizing
+.claude-plugin/marketplace.json     makes this repository a plugin marketplace
+plugin/                             the writing-toolkit plugin
+  skills/academic-writing/
+    SKILL.md                        core rules, loaded when Claude writes academic text
+    reference/                      detailed rules, opened one at a time when needed
+    scripts/lint_text.py            the writing linter
+    scripts/lint_rules.json         its default rules
+  hooks/hooks.json                  runs the linter after Claude edits a .tex file
+contributions/                      one file per contributor, plus TEMPLATE.md
+                                    (sfgangloff.md is the maintainer's own, named file)
+tools/contribute.sh                 the two contribution commands
+tools/extract_messages.py           extracts your messages from Claude Code transcripts
+tools/check_anonymity.py            mechanical anonymity scan
+tools/prompts/                      prompts for drafting, reviewing and synthesizing
+tests/                              tests of the scripts (python3 -m unittest discover tests)
 ```
 
 ## License
 
-The rules and other texts are licensed under [CC BY 4.0](LICENSE). The code in `tools/` is licensed under [MIT](LICENSE-CODE).
+The rules and other texts are licensed under [CC BY 4.0](LICENSE). The code (`tools/`, `tests/` and the scripts and configuration of the plugin) is licensed under [MIT](LICENSE-CODE).

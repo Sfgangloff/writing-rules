@@ -1,3 +1,4 @@
 user_messages.txt
 .contribution/
 .DS_Store
+__pycache__/

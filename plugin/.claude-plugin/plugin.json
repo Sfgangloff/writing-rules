@@ -1,0 +1,12 @@
+{
+  "name": "writing-toolkit",
+  "version": "0.1.0",
+  "description": "Tools for writing with Claude: academic writing rules distilled from researchers' corrections, and a linter that flags phrasings that read as AI-generated.",
+  "author": {
+    "name": "Sfgangloff"
+  },
+  "homepage": "https://github.com/Sfgangloff/writing-rules",
+  "repository": "https://github.com/Sfgangloff/writing-rules",
+  "license": "MIT AND CC-BY-4.0",
+  "keywords": ["writing", "academic", "papers", "linter", "style"]
+}

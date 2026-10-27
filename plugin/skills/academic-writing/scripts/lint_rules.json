@@ -1,0 +1,47 @@
+{
+  "comment": "Default rules of the writing linter. Override or extend them in ~/.claude/writing-rules/lint.json (all your projects) or .claude/writing-rules/lint.json (one project). See the README of the writing-rules repository.",
+  "hook_extensions": [".tex"],
+  "rules": [
+    {
+      "id": "rather-than",
+      "pattern": "\\brather than\\b",
+      "message": "\"rather than\" reads as AI-generated; use \"instead of\" or restructure the sentence",
+      "replace": "instead of"
+    },
+    {
+      "id": "em-dash",
+      "pattern": "—|(?<=[^\\s-])\\s*---\\s*(?=[^\\s-])",
+      "message": "em dash; use \" - \", parentheses, commas or a new sentence, and vary between them"
+    },
+    {
+      "id": "not-x-appositive",
+      "pattern": ", not (?:a |an |the |just |merely |only )?\\w+",
+      "message": "\", not X\" contrast; remove it if X adds nothing, otherwise state the positive claim first"
+    },
+    {
+      "id": "not-merely",
+      "pattern": "\\bnot (?:merely|simply|just) ",
+      "message": "\"not merely/simply/just\" contrast; state the claim positively"
+    },
+    {
+      "id": "intensifiers",
+      "pattern": "\\b(?:genuinely|truly|tellingly|gracefully)\\b",
+      "message": "intensifier that reads as AI-generated; remove it"
+    },
+    {
+      "id": "ai-vocabulary",
+      "pattern": "\\b(?:testbeds?|load-bearing|grab-bag|yardstick|stopgap|piecemeal|bookkeeping|for free|does real work)\\b",
+      "message": "word associated with AI-generated text; name the actual thing or reformulate plainly"
+    },
+    {
+      "id": "worth-making-explicit",
+      "pattern": "\\b(?:is|are) worth (?:making explicit|stating plainly|noting)\\b",
+      "message": "meta-commentary; say the thing directly"
+    },
+    {
+      "id": "meta-commentary",
+      "pattern": "\\b(?:we|I) do not pursue this (?:connection|direction|question) further\\b|\\bThis is a position paper\\b",
+      "message": "sentence about the paper instead of its content; remove it"
+    }
+  ]
+}
