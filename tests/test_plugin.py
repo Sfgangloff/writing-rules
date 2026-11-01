@@ -21,6 +21,23 @@ class PluginTest(unittest.TestCase):
         present = set(os.listdir(os.path.join(SKILL, "reference")))
         self.assertEqual(listed, present)
 
+    def test_review_pass_refers_to_existing_files(self):
+        review = os.path.join(ROOT, "plugin", "skills", "review-pass")
+        with open(os.path.join(review, "SKILL.md"), encoding="utf-8") as handle:
+            skill = handle.read()
+        self.assertTrue(skill.startswith("---\nname: review-pass\ndescription: "))
+        for path in re.findall(r"`?(\.\./academic-writing/[\w/.-]+\.(?:md|py))", skill):
+            self.assertTrue(os.path.isfile(os.path.join(review, path)), path)
+        for name in re.findall(r"`(\w+\.md)`", skill):
+            if name != "log.md":
+                self.assertTrue(os.path.isfile(os.path.join(SKILL, "reference", name)), name)
+
+    def test_reader_agent_is_defined(self):
+        with open(os.path.join(ROOT, "plugin", "agents", "reader.md"), encoding="utf-8") as handle:
+            agent = handle.read()
+        self.assertTrue(agent.startswith("---\nname: reader\ndescription: "))
+        self.assertIn("writing-toolkit:reader", open(os.path.join(ROOT, "plugin", "skills", "review-pass", "SKILL.md")).read())
+
     def test_default_rules_have_unique_ids(self):
         with open(os.path.join(SKILL, "scripts", "lint_rules.json"), encoding="utf-8") as handle:
             ids = [rule["id"] for rule in json.load(handle)["rules"]]
