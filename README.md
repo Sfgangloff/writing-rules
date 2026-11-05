@@ -33,9 +33,15 @@ The first version comes from about 1,000 corrections made by one researcher over
 |---|---|
 | Rather than a single pooled number, Table 2 reports per-world accuracy &mdash; a genuinely more informative view. As revised, the effect no longer depends on the seed. | Table 2 reports the accuracy of the model on each world separately. The effect is the same for the five random seeds we tried. |
 
-The `writing-toolkit` plugin contains two things:
+The `writing-toolkit` plugin contains three things:
 
 - **The `academic-writing` skill.** Claude loads it whenever it drafts, edits or reviews an academic text. It holds a short core of rules that apply to every text, and detailed rules in separate files (paper structure, argumentation, mathematics, citations, position papers, submission, style) that Claude opens one at a time, only when the task needs them. This keeps Claude's attention on the rules that matter for what it is doing.
+- **The `review-pass` skill.** A whole review of a draft, done the way a careful author does it, before the author's own review. Ask for it with `/writing-toolkit:review-pass`, or by asking Claude to review the paper or bring it to a page limit. It has five phases:
+  1. **Clarity, paragraph by paragraph.** A simulated reader, a separate agent that has seen only the paper up to that point (none of the code, notes or conversations), goes through each paragraph sentence by sentence. It asks what a colleague or a reviewer would ask: an undefined term, a missing step, an arbitrary choice, a claim stronger than the evidence, a reference to something the reader cannot see. Claude rewrites the paragraph, applies the rules, and asks again until the reader has no more questions. Questions only the author can answer are collected for them. Length does not matter yet.
+  2. **Global checks.** Notation and terms across the whole paper and the appendices, definitions before use, an introduction that compresses the body without repeating it, claims that match the results, summaries of cited works.
+  3. **Length.** Claude asks for the page and abstract limits, then removes only clear repetitions, compresses without losing meaning, and moves the rest to appendices.
+  4. **Appendices.** Each covers one theme, is self-contained (no back and forth with the main text) and is cited from the main text. The reader checks each one on its own.
+  5. **Polish and handover.** A final check, then a log of what changed, what to check first, and the open questions, for the author's review.
 - **A writing linter.** Every time Claude writes into a `.tex` file, the linter scans the new text for phrasings that read as AI-generated ("rather than", em dashes, ", not X" contrasts, "genuinely", "testbed", ...) and asks Claude to rewrite them. You can also run it yourself.
 
 ## Install
@@ -153,6 +159,8 @@ plugin/                             the writing-toolkit plugin
     reference/                      detailed rules, opened one at a time when needed
     scripts/lint_text.py            the writing linter
     scripts/lint_rules.json         its default rules
+  skills/review-pass/SKILL.md       the full review procedure
+  agents/reader.md                  the simulated reader used by the review pass
   hooks/hooks.json                  runs the linter after Claude edits a .tex file
 contributions/                      one file per contributor, plus TEMPLATE.md
                                     (sfgangloff.md is the maintainer's own, named file)
