@@ -1,0 +1,10 @@
+\section{Experimental setup}
+\label{sec:setup}
+
+\paragraph{Problem.} Each example is an addition of two non-negative integers written in base 10. Models are trained on additions whose operands have between 1 and 8 digits, and tested on in-distribution problems (1 to 8 digits) and on out-of-distribution problems (9 to 16 digits). The out-of-distribution test set contains 10{,}000 problems, uniformly distributed over lengths.
+
+\paragraph{Model and training.} We train decoder-only transformers with 6 layers, 8 attention heads and a hidden size of 512, from scratch, with the AdamW optimizer. We use a linear learning-rate warmup over the first 2{,}000 steps, followed by a cosine decay. This schedule avoids the loss spikes we observed early in training without it. Each configuration is trained with three random seeds, and we report the mean.
+
+\paragraph{Scratchpad.} With a scratchpad, the model writes, before the answer, the sum and the carry of each digit position, from the least significant digit to the most significant one.
+
+\paragraph{Index hints.} With index hints, each digit of the input and of the scratchpad is preceded by a token that encodes its position in the number.

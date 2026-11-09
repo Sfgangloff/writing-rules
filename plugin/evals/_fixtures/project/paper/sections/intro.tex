@@ -1,0 +1,13 @@
+\section{Introduction}
+
+Transformers trained on arithmetic often reach near-perfect accuracy on numbers of the lengths they were trained on, and fail on longer ones. This failure of length generalization is a simple and well-controlled instance of a broader question: when does a model learn an algorithm instead of a set of input-output associations?
+
+A common remedy is to let the model write intermediate steps before the answer, in a scratchpad. For multi-digit addition, the scratchpad lists the digit-wise sums and carries from the least to the most significant digit.
+
+In this paper we study a second, complementary change to the input format: index hints, which mark each digit with its position in the number.
+
+Our contributions are the following.
+\begin{itemize}
+  \item We measure length generalization in addition for small transformers with and without a scratchpad, and with and without index hints.
+  \item We show that index hints and scratchpads have complementary effects, and analyze the remaining errors.
+\end{itemize}
