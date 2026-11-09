@@ -2,3 +2,6 @@ user_messages.txt
 .contribution/
 .DS_Store
 __pycache__/
+
+# autoreview runs: they contain passages of unpublished papers
+runs/
