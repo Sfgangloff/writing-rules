@@ -1,0 +1,6 @@
+\section{Discussion}
+\label{sec:discussion}
+
+The scratchpad and the index hints address two different difficulties. The scratchpad breaks the computation into steps that each involve one digit position, and the index hints tell the model which position it is processing. Each change alone improves out-of-distribution accuracy, and their combination improves it most.
+
+These results show that index hints solve length generalization for arithmetic. Transformers therefore do not need architectural changes to extrapolate: the right input format is enough, and this conclusion should hold for any algorithmic task.
