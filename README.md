@@ -149,6 +149,10 @@ Contributions are merged into the skill with [`tools/prompts/synthesis.md`](tool
 
 Each synthesis is recorded in [`SYNTHESIS_LOG.md`](SYNTHESIS_LOG.md).
 
+## Experimental: rules from automated review
+
+[`tools/autoreview`](tools/autoreview) revises an AI-drafted paper without the author: a simulated reader, who has seen only the paper up to each paragraph, asks its questions; an editor, who knows the code and the notes, answers them in the text; the two alternate until the reader understands every paragraph, then a third agent fits the paper to its page limits with self-contained appendices. Every change is recorded with the question it answers, in the format of the corrections above, so that the same synthesis can turn them into rules. Whether such rules agree with those from human corrections is an open question.
+
 ## Repository layout
 
 ```
@@ -168,6 +172,7 @@ tools/contribute.sh                 the two contribution commands
 tools/extract_messages.py           extracts your messages from Claude Code transcripts
 tools/check_anonymity.py            mechanical anonymity scan
 tools/prompts/                      prompts for drafting, reviewing and synthesizing
+tools/autoreview/                   automated review of a paper, and rules from its corrections
 tests/                              tests of the scripts (python3 -m unittest discover tests)
 ```
 

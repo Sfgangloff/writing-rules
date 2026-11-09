@@ -2,3 +2,9 @@ user_messages.txt
 .contribution/
 .DS_Store
 __pycache__/
+
+# Video rendering project (large, built locally)
+assets/video/
+
+# autoreview runs: they contain passages of unpublished papers
+runs/
